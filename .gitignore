@@ -39,5 +39,46 @@ src/icons/qbt-theme/build-icons/node_modules/
 src/icons/skin/build-icons/node_modules/
 src/icons/skin/build-icons/icons/*.png
 
+
+# QT directory
+.qt/
+.qt/**
+
 # CMake build directory
 build/
+CMakeCache.txt
+CMakeFiles/
+CMakeFiles/**
+cmake_install.cmake
+dist/CMakeFiles/
+dist/CMakeFiles/**
+dist/cmake_install.cmake
+dist/unix/CMakeFiles/
+dist/unix/CMakeFiles/**
+dist/unix/cmake_install.cmake
+src/CMakeFiles/
+src/CMakeFiles/**
+src/app/CMakeFiles/
+src/app/CMakeFiles/**
+src/app/cmake_install.cmake
+src/base/CMakeFiles/
+src/base/CMakeFiles/**
+src/base/cmake_install.cmake
+src/base/qbt_base_autogen/
+src/base/qbt_base_autogen/**
+src/cmake_install.cmake
+src/gui/CMakeFiles/
+src/gui/CMakeFiles/**
+src/gui/cmake_install.cmake
+src/webui/CMakeFiles/
+src/webui/CMakeFiles/**
+src/webui/cmake_install.cmake
+
+# binaries
+
+src/base/*.a
+src/webui/*.a
+src/gui/qbt_gui_autogen/
+src/gui/qbt_gui_autogen/**
+src/webui/qbt_webui_autogen/
+src/webui/qbt_webui_autogen/**
