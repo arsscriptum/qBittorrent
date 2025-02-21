@@ -1,13 +1,10 @@
 # qBittorrent - A BitTorrent client in Qt
 
 ## Description:
-qBittorrent is a bittorrent client programmed in C++ / Qt that uses
-libtorrent (sometimes called libtorrent-rasterbar) by Arvid Norberg.
 
-It aims to be a good alternative to all other bittorrent clients
-out there. qBittorrent is fast, stable and provides unicode
-support as well as many features.
+**Branch Of** [qbittorrent/qBittorrent](https://github.com/qbittorrent/qBittorrent). My branch is aimed at having a stable codebase for my **headless qBittorrent version** used for my docker container](https://github.com/arsscriptum/docker.qBittorrentNoxVpn) which runs this latest headless qBittorrent client while connecting to OpenVPN with integrated VPN.
 
+It can be used in standalone mode, but it's not supported.
 
 ## Qt Dependency 
 
@@ -60,6 +57,27 @@ git update-index --assume-unchanged version.nfo
 git update-index --assume-unchanged build.nfo
 ```
 
-### Installation:
+#### Build / Installation:
 
 Refer to the [INSTALL](INSTALL) file.
+
+## Features
+
+| **FEATURES**                            |  **STATUS** | **VERSION** | **DOCKERHUB** |
+|-----------------------------------------|:-----------:|:-----------:|:-------------:|
+| ➭ View IP Data in About Menu            |    🚧 wip    |      ♒︎      |       ❌       |
+| ➭ Read DHT bootstrap nodes from cfg     |    ✔️ done   |     1.0     |      1.0      |
+| ➭ Integrate speedtest-cli in build      |    ✔️ done   |     1.0     |      1.0      |
+| ➭ Add a menu to show speed test results | ⏳ whishlist |      ♒︎      |       ❌       |
+| ➭                                       |             |             |               |
+
+
+## Versions
+
+| **VERSION** |   **STATUS**   | **DOCKERHUB** |  **DATE**  |
+|-------------|:--------------:|:-------------:|:----------:|
+|  **1.0.0**  |    ✔️ Stable    |     [1.0.0](https://hub.docker.com/repository/docker/arsscriptum/qbittorrentvpn/tags/1.0/sha256-eb4e39680cf805d838f765a137169f51463704ccab2dc66cfd700b1eb60178cd)     | 20/02/2025 |
+|  **1.2.0**  | ■■□□□□□□□□ 20% |       ❌       |      ❌     |
+|  **1.3.0**  |        ⏳       |       ♒︎       |      ♒︎     |
+|  **1.4.0**  |        ⏳       |       ♒︎       |      ♒︎     |
+|  **1.5.0**  |        ⏳       |       ♒︎       |      ♒︎     |
