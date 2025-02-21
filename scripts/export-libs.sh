@@ -71,13 +71,10 @@ for arg in "$@"; do
             ;;
         -p|--path)
             DESTPATH_OPT=1
-            if [[ $# -gt 1 && ! "$2" =~ ^- ]]; then
+            shift # Shift past the version
+            if [[ $# -gt 1 ]]; then
                 TMP_EXPORT_DIR="$2"
-                if [[ ! -d "$TMP_EXPORT_DIR" ]]; then
-                    log_error "Specified Path \"$TMP_EXPORT_DIR\" is invalid"
-                fi
                 EXPORT_DIR="$TMP_EXPORT_DIR"
-                shift # Shift past the version
             fi
             ;;
         -f|--force)
