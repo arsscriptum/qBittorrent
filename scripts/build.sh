@@ -42,7 +42,7 @@ LOG_FILE="$LOGS_DIR/build.log"
 VERSION_FILE=$ROOT_DIR/version.nfo
 BUILD_FILE=$ROOT_DIR/build.nfo
 VERSION_SCRIPT=$SCRIPT_DIR/update_version.sh
-
+BIN_OUT="$ROOT_DIR/build/qbittorrent-nox"
 
 if [[ ! -f "$CMAKELIST_FILE" ]]; then
    echo "[error] missing CMakeList.txt file @ \"$CMAKELIST_FILE\"!"
@@ -56,7 +56,6 @@ pushd $ROOT_DIR > /dev/null
 # =========================================================
 # function:     logs functions
 # description:  log messages to fils and console
-#              
 # =========================================================
 
 log_info() {
@@ -88,13 +87,19 @@ fi
 
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DGUI=OFF
 
-if[[ $? -ne 0 ]]; then
+if [[ $? -ne 0 ]]; then
     log_error "cmake error"
 fi
 
 cmake --build build --parallel $(nproc)
-if[[ $? -ne 0 ]]; then
+if [[ $? -ne 0 ]]; then
     log_error "cmake error"
 fi
 
 popd > /dev/null
+
+log_info "SUCCESS!"
+
+if [[ -f "$BIN_OUT" ]]; then
+    log_info "Binary output: $BIN_OUT"
+fi
