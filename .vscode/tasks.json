@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Project - Development",
+      "type": "shell",
+      "command": "./scripts/build.sh",
+      "args": ["--debug", "--gui"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Rebuild Project",
+      "type": "shell",
+      "command": "./scripts/build_project.sh",
+      "args": ["--clean"],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run_Project",
+      "type": "shell",
+      "command": "/home/gp/dev/qBittorrent/build/qbittorrent",
+      "group": {
+        "kind": "run",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Debug_Project",
+      "type": "shell",
+      "command": "./scripts/start-debug.sh",
+      "group": {
+        "kind": "run",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

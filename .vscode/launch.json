@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to Remote GDB Server",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "/home/gp/dev/qBittorrent/build/qbittorrent",
+            "MIMode": "gdb",
+            "useExtendedRemote": true,
+            "miDebuggerServerAddress": "mini:9999",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "sourceFileMap": {
+                "/home/gp/dev/qBittorrent": "${workspaceFolder}"
+            }
+        }
+    ]
+}
