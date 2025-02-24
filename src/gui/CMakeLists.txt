@@ -3,6 +3,7 @@ find_package(Qt6 ${minQt6Version} REQUIRED COMPONENTS Widgets Svg)
 # CMAKE_AUTO_UI causes unnecessary rebuilds
 qt_wrap_ui(UI_HEADERS
     aboutdialog.ui
+    networkdialog.ui
     addnewtorrentdialog.ui
     addtorrentparamswidget.ui
     autoexpandabledialog.ui
@@ -45,6 +46,7 @@ add_library(qbt_gui STATIC
     advancedsettings.h
     autoexpandabledialog.h
     banlistoptionsdialog.h
+    ipgeolocation.h
     color.h
     colorscheme.h
     cookiesdialog.h
@@ -68,7 +70,9 @@ add_library(qbt_gui STATIC
     log/loglistview.h
     log/logmodel.h
     mainwindow.h
+    networkdialog.h
     optionsdialog.h
+    networkspeedtest.h
     powermanagement/inhibitor.h
     powermanagement/powermanagement.h
     previewlistdelegate.h
@@ -167,6 +171,9 @@ add_library(qbt_gui STATIC
     log/loglistview.cpp
     log/logmodel.cpp
     mainwindow.cpp
+    networkdialog.cpp
+    networkspeedtest.cpp
+    ipgeolocation.cpp
     optionsdialog.cpp
     powermanagement/inhibitor.cpp
     powermanagement/powermanagement.cpp

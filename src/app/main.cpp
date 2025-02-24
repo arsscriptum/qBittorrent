@@ -52,6 +52,7 @@
 #ifndef DISABLE_GUI
 // GUI-only includes
 #include <QFont>
+#include <QFile>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPen>
@@ -170,6 +171,18 @@ namespace
 #endif
 }
 
+void customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QString file_path = QStringLiteral("/home/gp/tmp/qbittorrent_debug.log");
+    QFile logFile(file_path);
+    if (logFile.open(QIODevice::Append | QIODevice::Text))
+    {
+        QTextStream out(&logFile);
+        out << msg << "\n";
+    }
+}
+
+
 // Main
 int main(int argc, char *argv[])
 {
@@ -182,6 +195,8 @@ int main(int argc, char *argv[])
     adjustFileDescriptorLimit();
 #endif
 
+    qInstallMessageHandler(customMessageHandler);
+     qDebug() << "This will be logged to debug.log";
     // We must save it here because QApplication constructor may change it
     const bool isOneArg = (argc == 2);
 
@@ -257,7 +272,7 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        CachedSettingValue<bool> legalNoticeShown {u"LegalNotice/Accepted"_s, false};
+        /*CachedSettingValue<bool> legalNoticeShown {u"LegalNotice/Accepted"_s, false};
         if (params.confirmLegalNotice)
             legalNoticeShown = true;
 
@@ -276,6 +291,7 @@ int main(int argc, char *argv[])
             if (isInteractive)
                 legalNoticeShown = true;
         }
+        */
 
 #ifdef Q_OS_MACOS
         // Since Apple made difficult for users to set PATH, we set here for convenience.

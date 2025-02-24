@@ -75,6 +75,7 @@
 #include "base/utils/password.h"
 #include "base/version.h"
 #include "aboutdialog.h"
+#include "networkdialog.h"
 #include "autoexpandabledialog.h"
 #include "cookiesdialog.h"
 #include "desktopintegration.h"
@@ -182,6 +183,8 @@ MainWindow::MainWindow(IGUIApplication *app, const WindowState initialState, con
     m_ui->menuLog->setIcon(UIThemeManager::instance()->getIcon(u"help-contents"_s));
     m_ui->actionCheckForUpdates->setIcon(UIThemeManager::instance()->getIcon(u"view-refresh"_s));
 
+    m_ui->actionNetworkInfo->setIcon(UIThemeManager::instance()->getIcon(u"network-server"_s));
+
     m_ui->actionPauseSession->setVisible(!BitTorrent::Session::instance()->isPaused());
     m_ui->actionResumeSession->setVisible(BitTorrent::Session::instance()->isPaused());
     connect(BitTorrent::Session::instance(), &BitTorrent::Session::paused, this, [this]
@@ -198,6 +201,8 @@ MainWindow::MainWindow(IGUIApplication *app, const WindowState initialState, con
         refreshWindowTitle();
         refreshTrayIconTooltip();
     });
+
+    connect(m_ui->actionNetworkInfo, &QAction::triggered, this, &MainWindow::on_actionNetworkInfo_triggered);
 
     auto *lockMenu = new QMenu(m_ui->menuView);
     lockMenu->addAction(tr("&Set Password"), this, &MainWindow::defineUILockPassword);
@@ -923,6 +928,21 @@ void MainWindow::createKeyboardShortcuts()
 #endif
 }
 
+void MainWindow::openNetworkDialog()
+{
+    // About dialog
+    if (m_networkDlg)
+    {
+        m_networkDlg->activateWindow();
+    }
+    else
+    {
+        m_networkDlg = new NetworkDialog(this);
+        m_networkDlg->setAttribute(Qt::WA_DeleteOnClose);
+        m_networkDlg->show();
+    }
+}
+
 // Keyboard shortcuts slots
 void MainWindow::displayTransferTab() const
 {
@@ -1083,6 +1103,14 @@ void MainWindow::on_actionAbout_triggered()
         m_aboutDlg->show();
     }
 }
+
+
+
+void MainWindow::on_actionNetworkInfo_triggered()
+{
+   openNetworkDialog();
+}
+
 
 void MainWindow::on_actionStatistics_triggered()
 {

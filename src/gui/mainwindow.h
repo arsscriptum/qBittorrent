@@ -37,7 +37,7 @@
 #include "base/settingvalue.h"
 #include "guiapplicationcomponent.h"
 #include "windowstate.h"
-
+#include "networkdialog.h"
 class QCloseEvent;
 class QComboBox;
 class QFileSystemWatcher;
@@ -106,6 +106,7 @@ public:
 
     void activate();
     void cleanup();
+    void openNetworkDialog();
 
 private slots:
     void showFilterContextMenu();
@@ -158,6 +159,7 @@ private slots:
     void on_actionAutoHibernate_toggled(bool);
     void on_actionAutoShutdown_toggled(bool);
     void on_actionAbout_triggered();
+    void on_actionNetworkInfo_triggered();
     void on_actionStatistics_triggered();
     void on_actionCreateTorrent_triggered();
     void on_actionOptions_triggered();
@@ -220,6 +222,7 @@ private:
     QPointer<StatusBar> m_statusBar;
     QPointer<OptionsDialog> m_options;
     QPointer<AboutDialog> m_aboutDlg;
+    QPointer<NetworkDialog> m_networkDlg;
     QPointer<StatsDialog> m_statsDlg;
     QPointer<TorrentCreatorDialog> m_createTorrentDlg;
     QPointer<DownloadFromURLDialog> m_downloadFromURLDialog;

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>IP INFO</title>
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>IP Information</h2>
+
+    <table>
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>IP</td><td id="ip"></td></tr>
+        <tr><td>Hostname</td><td id="hostname"></td></tr>
+        <tr><td>City</td><td id="city"></td></tr>
+        <tr><td>Region</td><td id="region"></td></tr>
+        <tr><td>Country</td><td id="country"></td></tr>
+        <tr><td>Location</td><td id="loc"></td></tr>
+        <tr><td>Organization</td><td id="org"></td></tr>
+        <tr><td>Postal Code</td><td id="postal"></td></tr>
+        <tr><td>Timezone</td><td id="timezone"></td></tr>
+        <tr><td>Readme</td><td><a id="readme" href="#" target="_blank"></a></td></tr>
+    </table>
+
+    <script>
+        new QWebChannel(qt.webChannelTransport, function(channel) {
+            var backend = channel.objects.backend;
+            
+            document.getElementById("ip").textContent = backend.ip;
+            document.getElementById("hostname").textContent = backend.hostname;
+            document.getElementById("city").textContent = backend.city;
+            document.getElementById("region").textContent = backend.region;
+            document.getElementById("country").textContent = backend.country;
+            document.getElementById("loc").textContent = backend.loc;
+            document.getElementById("org").textContent = backend.org;
+            document.getElementById("postal").textContent = backend.postal;
+            document.getElementById("timezone").textContent = backend.timezone;
+            
+            var readmeLink = document.getElementById("readme");
+            readmeLink.textContent = backend.readme;
+            readmeLink.href = backend.readme;
+        });
+    </script>
+
+</body>
+</html>
