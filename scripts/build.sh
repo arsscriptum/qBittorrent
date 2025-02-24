@@ -103,7 +103,7 @@ for arg in "$@"; do
             shift # Shift past the version
             if [[ $# -gt 1 ]]; then
                 TMP_TARGET="$2"
-                if [[ "$TMP_TARGET" == "debug" || "$TMP_TARGET" == "release" ]]; then
+                if [[ "$TMP_TARGET" == "Debug" || "$TMP_TARGET" == "Release" ]]; then
                     BUILD_TARGET="$TMP_TARGET"
                 else
                     log_error "invalid build target, use debug or release"
@@ -115,6 +115,14 @@ for arg in "$@"; do
             ;;
         -n|--nomake)
             NOMAKE_OPT=1
+            ;;
+        -d|--debug)
+            TARGET_OPT=1
+            BUILD_TARGET="Debug"
+            ;;
+        -r|--release)
+            TARGET_OPT=1
+            BUILD_TARGET="Release"
             ;;
         -h|--help)
             usage
