@@ -65,8 +65,11 @@ private slots:
     void handleGeoLocationFailed(const QString &errorMessage);
     
 private:
+    
+    QTimer *m_progressTimer = nullptr;  // Store the timer instance
     bool _enableProgress;
     void startTextProgress();
+    void stopTextProgress();
     Ui::NetworkDialog *m_ui;
     SettingValue<QSize> m_storeDialogSize;
     class NetworkSpeedTest *m_speedTest;

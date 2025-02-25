@@ -123,13 +123,14 @@ NetworkDialog::~NetworkDialog()
 void NetworkDialog::handleSpeedTestCompleted(const QString &result)
 {
     LogMsg(tr("NetworkDialog::handleSpeedTestCompleted() - Test successful."));
-    _enableProgress=false;
+    stopTextProgress();
     m_ui->netspeedData->setHtml(result);
 }
 
 void NetworkDialog::handleSpeedTestFailed(const QString &errorMessage)
 {
     LogMsg(tr("NetworkDialog::handleSpeedTestFailed() - Test failed: %1").arg(errorMessage));
+    stopTextProgress();
     m_ui->netspeedData->setHtml(errorMessage);
 }
 
@@ -157,11 +158,11 @@ void NetworkDialog::startTextProgress()
     QString progressBar = QStringLiteral("⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜");
 
     // Timer to update progress every 150ms (15 sec total)
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this, timer, progress, progressBar]() mutable {
+    m_progressTimer = new QTimer(this);
+    connect(m_progressTimer, &QTimer::timeout, this, [this, progress, progressBar]() mutable {
         if (*progress >= 100) {
-            timer->stop();
-            m_ui->netspeedData->setPlainText(QStringLiteral("\n\t\t    Progress: 100%\n\n\t\t  ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛\n\n\t\tSpeed Test Complete!"));
+            m_progressTimer->stop();
+            m_ui->netspeedData->setPlainText(QStringLiteral("\n\t     Progress: 100%\n\n\t  ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛\n\n  Speed Test: calculating results... Please wait..."));
             delete progress;  // Clean up dynamically allocated int
         } else {
             int blocksFilled = *progress / 10; // Determine how many blocks to replace
@@ -171,14 +172,37 @@ void NetworkDialog::startTextProgress()
             for (int i = 0; i < 10; ++i) {
                 updatedBar += (i < blocksFilled) ? QStringLiteral("⬛") : QStringLiteral("⬜");
             }
+            int tmpProgress = (*progress);
+            QString sCurrentState;
+            if(tmpProgress < 30){
+                sCurrentState = QStringLiteral("Getting the best server for testing...");
+            }else if(tmpProgress < 60){
+                sCurrentState = QStringLiteral("Testing Download Speed...");
+            }else if(tmpProgress < 90){
+                sCurrentState = QStringLiteral("Testing Upload Speed...");
+            }else{
+                sCurrentState = QStringLiteral("Gathering All Results...");
+            }
 
             // Update display
-            m_ui->netspeedData->setPlainText(QStringLiteral("\n\t\t    Progress: %1%\n\n\t\t  %2").arg(*progress).arg(updatedBar));
+            m_ui->netspeedData->setPlainText(QStringLiteral("\n\t       Progress: %1%\n\n\t  %2\n\n\t    %3").arg(*progress).arg(updatedBar).arg(sCurrentState));
 
             // Increment progress
             (*progress)++;
         }
     });
 
-    timer->start(700); // Runs every 150ms
+    m_progressTimer->start(700); // Runs every 150ms
+}
+
+void NetworkDialog::stopTextProgress()
+{
+    _enableProgress = false;
+    if (m_progressTimer) {
+        disconnect(m_progressTimer, &QTimer::timeout, nullptr, nullptr);
+        m_progressTimer->stop();
+        m_progressTimer->deleteLater();
+        m_progressTimer = nullptr;      
+        m_ui->ipLocationData->setPlainText(QStringLiteral(""));
+    }
 }
