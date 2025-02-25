@@ -152,6 +152,15 @@ log_info "SYSTEMD               $SYSTEMD_FEATURE"
 log_info "PARALLEL              $(nproc)"
 log_info "======================================================"
 
+
+if [[ $CLEAN_OPT -eq 1 ]]; then
+    make clean
+    rm -rf "$ROOT_DIR/CMakeCache.txt" "$ROOT_DIR/CMakeFiles"
+    rm -rf "$ROOT_DIR/build"
+    exit 0
+fi
+
+
 cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TARGET -DGUI=$GUI_FEATURE -DWEBUI=$WEBUI_FEATURE -DSTACKTRACE=$STACKTRACE_FEATURE -DDBUS=$DBUS_FEATURE -DTESTING=$TESTING_FEATURE -DVERBOSE_CONFIGURE=$VERBOSE_CONFIGURE_FEATURE -DSYSTEMD=$SYSTEMD_FEATURE
 
 if [[ $? -ne 0 ]]; then
