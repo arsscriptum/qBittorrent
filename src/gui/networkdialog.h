@@ -58,21 +58,6 @@ public:
     ~NetworkDialog() override;
 
 
-    struct IPInfo
-    {
-        QString ip;
-        QString city;
-        QString region;
-        QString country;
-
-        // Convert IPInfo to a const QString
-        QString toQString() const
-        {
-            return QStringLiteral("IP: %1\nCity: %2\nRegion: %3\nCountry: %4")
-                .arg(ip, city, region, country);
-        }
-    };
-
 private slots:
     void handleSpeedTestCompleted(const QString &result);
     void handleSpeedTestFailed(const QString &errorMessage);
@@ -80,8 +65,8 @@ private slots:
     void handleGeoLocationFailed(const QString &errorMessage);
     
 private:
-
-    QString generateIPInfoHTML(const IPInfo &info) const;
+    bool _enableProgress;
+    void startTextProgress();
     Ui::NetworkDialog *m_ui;
     SettingValue<QSize> m_storeDialogSize;
     class NetworkSpeedTest *m_speedTest;

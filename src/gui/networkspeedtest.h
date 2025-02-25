@@ -13,14 +13,31 @@ class NetworkSpeedTest : public QObject
 public:
     explicit NetworkSpeedTest(QObject *parent = nullptr);
     void runSpeedTest();
+    
+    struct SpeedTestResult
+    {
+        double downloadSpeed;  // in bits per second
+        double uploadSpeed;    // in bits per second
+        double ping;           // in milliseconds
+
+        // Server Information
+        QString serverName;
+        QString serverCity;
+        QString serverCountry;
+        double serverLatency;
+
+        // Client Information
+        QString clientIP;
+        QString clientISP;
+    };
 
 signals:
-    void speedTestCompleted(const QString &result);
-    void speedTestFailed(const QString &errorMessage);
+    void sigSpeedTestCompleted(const QString &result);
+    void sigSpeedTestFailed(const QString &errorMessage);
 
 private slots:
-    void onSpeedTestFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
+    void onProcessTerminated(int exitCode, QProcess::ExitStatus exitStatus);
 private:
+    QString generateSpeedTestHTML(const SpeedTestResult &result) const;
     QProcess *m_process = nullptr;
 };

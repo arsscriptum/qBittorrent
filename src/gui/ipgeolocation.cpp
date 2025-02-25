@@ -22,8 +22,7 @@
 IPGeoLocation::IPGeoLocation(QObject *parent) 
     : QObject(parent), m_process(new QProcess(this))
 {
-    connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this, &IPGeoLocation::onProcessFinished);
+    connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),this, &IPGeoLocation::onProcessTerminated);
 }
 
 
@@ -35,32 +34,61 @@ void IPGeoLocation::doRequest()
     QNetworkRequest request{QUrl(url)};
     request.setHeader(QNetworkRequest::UserAgentHeader, agent);
 
-    connect(&manager, &QNetworkAccessManager::finished, this, &IPGeoLocation::onReplyFinished);
+    connect(&manager, &QNetworkAccessManager::finished, this, &IPGeoLocation::onNetworkReply);
     manager.get(request);
 }    
 
-void IPGeoLocation::onReplyFinished(QNetworkReply *reply)
+void IPGeoLocation::onNetworkReply(QNetworkReply *reply)
 {
+    IPInfo _ipinfo;
     if (reply->error() == QNetworkReply::NoError)
     {
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(reply->readAll());
+        QByteArray response = reply->readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
         if (jsonDoc.isObject())
         {
             QJsonObject jsonObj = jsonDoc.object();
+            _ipinfo.ip = jsonObj.value(u"ip").toString();
+            _ipinfo.city = jsonObj.value(u"city").toString();
+            _ipinfo.region = jsonObj.value(u"region").toString();
+            _ipinfo.country = jsonObj.value(u"country").toString();
             LogMsg(tr("IPGeoLocation::onReplyFinished() IP %1 City %2 Region %3 Country %4").arg(jsonObj.value(u"ip").toString(),jsonObj.value(u"city").toString(),jsonObj.value(u"region").toString(),jsonObj.value(u"country").toString()));
-            
+            QString result=generateIPInfoHTML(_ipinfo);
+            emit sigRequestCompleted(result);
         }
     }
     else
     {
-         qWarning() << "HTTP Error:" << reply->errorString();
+        LogMsg(tr("HTTP ERROR %1").arg(reply->errorString()));
+        emit sigRequestFailed(reply->errorString());
     }
+
     reply->deleteLater();
 }
 
-void IPGeoLocation::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void IPGeoLocation::onProcessTerminated(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    LogMsg(tr("IPGeoLocation::onProcessFinished() - Process finished with exit code: %1").arg(exitCode));
+    LogMsg(tr("IPGeoLocation::onProcessTerminated() - Process finished with exit code: %1").arg(exitCode));
+    if (exitStatus == QProcess::CrashExit || exitCode != 0) {
+        LogMsg(tr("IPGeoLocation::onProcessTerminated() - Process crashed or exited with error."));
+        emit sigRequestFailed(QStringLiteral("Speed test failed."));
+        return;
+    }
 
-    // Read the
 }
+
+QString IPGeoLocation::generateIPInfoHTML(const IPInfo &info) const
+{
+    return u"<html><head/><body><p>"
+           u"<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">"
+           u"<tr><th>Field</th><th>Value</th></tr>"
+           u"<tr><td><b>IP</b></td><td>%1</td></tr>"
+           u"<tr><td><b>City</b></td><td>%2</td></tr>"
+           u"<tr><td><b>Region</b></td><td>%3</td></tr>"
+           u"<tr><td><b>Country</b></td><td>%4</td></tr>"
+           u"</table>"
+           u"</body></html>"_s
+        .arg(info.ip, info.city, info.region, info.country);
+}
+
+

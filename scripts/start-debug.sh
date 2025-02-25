@@ -9,7 +9,9 @@ if [[ -z "$PID" ]]; then
     exit 1
 fi
 
-killall gdbserver
+killall gdbserver 2> /dev/null
 
 # Start gdbserver and attach to the process
 echo "Starting gdbserver on qbittorrent (PID: $PID) at port 9999..."sudo /usr/bin/gdbserver :9999 --attach "$PID"
+
+/usr/bin/gdbserver :9999 --attach $PID

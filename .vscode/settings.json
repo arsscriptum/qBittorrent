@@ -52,6 +52,7 @@
         "qlist": "cpp",
         "complex": "cpp",
         "qprocess": "cpp",
-        "__locale": "cpp"
+        "__locale": "cpp",
+        "qlibraryinfo": "cpp"
     }
 }

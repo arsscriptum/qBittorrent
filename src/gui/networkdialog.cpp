@@ -54,28 +54,54 @@ NetworkDialog::NetworkDialog(QWidget *parent)
     , m_speedTest(new NetworkSpeedTest(this))
     , m_ipgeo(new IPGeoLocation(this))
 {
+    _enableProgress=true;
     m_ui->setupUi(this);
+    QString progressHtml1 = QStringLiteral(
+        "<html><head><style>"
+        "body { font-family: Arial, sans-serif; text-align: center; }"
+        "progress { width: 80%%; height: 30px; }"
+        "</style></head><body>"
+        "<h2>Running IP Geo Location...</h2>"
+        "<progress value='0' max='100'></progress>"
+        "<p>Waiting...</p>"
+        "</body></html>"
+    );
+    QString progressHtml2 = QStringLiteral(
+        "<html><head><style>"
+        "body { font-family: Arial, sans-serif; text-align: center; }"
+        "progress { width: 80%%; height: 30px; }"
+        "</style></head><body>"
+        "<h2>Running Speed Test...</h2>"
+        "<progress value='0' max='100'></progress>"
+        "<p>Waiting...</p>"
+        "</body></html>"
+    );
+    startTextProgress();
+    m_ui->ipLocationData->setHtml(progressHtml1);
+    m_ui->netspeedData->setHtml(progressHtml2);
 
-    connect(m_ipgeo, &IPGeoLocation::requestCompleted, 
+
+    connect(m_ipgeo, &IPGeoLocation::sigRequestCompleted, 
             this, &NetworkDialog::handleGeoLocationCompleted);
     
-    connect(m_ipgeo, &IPGeoLocation::requestFailed, 
+    connect(m_ipgeo, &IPGeoLocation::sigRequestFailed, 
             this, &NetworkDialog::handleGeoLocationFailed);
-
-
-    m_ipgeo->doRequest();
-
+    
     // Connect signals from NetworkSpeedTest to slots in NetworkDialog
-    connect(m_speedTest, &NetworkSpeedTest::speedTestCompleted, 
+    connect(m_speedTest, &NetworkSpeedTest::sigSpeedTestCompleted, 
             this, &NetworkDialog::handleSpeedTestCompleted);
     
-    connect(m_speedTest, &NetworkSpeedTest::speedTestFailed, 
+    connect(m_speedTest, &NetworkSpeedTest::sigSpeedTestFailed, 
             this, &NetworkDialog::handleSpeedTestFailed);
 
-    // Set waiting text and start speed test
-    m_ui->ipLocationData->setPlainText(QStringLiteral("WAITING..."));
+    
+    
     LogMsg(tr("NetworkDialog::NetworkDialog() - Starting network speed test."));
     m_speedTest->runSpeedTest();
+
+    LogMsg(tr("NetworkDialog::NetworkDialog() - Starting ipGeolocalisation::doRequest"));
+    m_ipgeo->doRequest();
+
 
     if (const auto readResult = Utils::IO::readFile(Path(u":/ipinfo.html"_s), -1, QIODevice::Text)){
             LogMsg(tr("NetworkDialog::NetworkDialog() readFile %1").arg(QString::fromUtf8(readResult.value())));
@@ -97,39 +123,62 @@ NetworkDialog::~NetworkDialog()
 void NetworkDialog::handleSpeedTestCompleted(const QString &result)
 {
     LogMsg(tr("NetworkDialog::handleSpeedTestCompleted() - Test successful."));
-    m_ui->ipLocationData->setPlainText(result);
+    _enableProgress=false;
+    m_ui->netspeedData->setHtml(result);
 }
 
 void NetworkDialog::handleSpeedTestFailed(const QString &errorMessage)
 {
     LogMsg(tr("NetworkDialog::handleSpeedTestFailed() - Test failed: %1").arg(errorMessage));
-    m_ui->ipLocationData->setPlainText(errorMessage);
+    m_ui->netspeedData->setHtml(errorMessage);
 }
 
 void NetworkDialog::handleGeoLocationCompleted(const QString &result)
 {
     LogMsg(tr("NetworkDialog::handleGeoLocationCompleted() - Test successful."));
-    m_ui->netspeedData->setPlainText(result);
+    m_ui->ipLocationData->setHtml(result);
 }
 
 void NetworkDialog::handleGeoLocationFailed(const QString &errorMessage)
 {
     LogMsg(tr("NetworkDialog::handleGeoLocationFailed() - Test failed: %1").arg(errorMessage));
-    m_ui->netspeedData->setPlainText(errorMessage);
+    m_ui->ipLocationData->setHtml(errorMessage);
 }
 
-
-QString NetworkDialog::generateIPInfoHTML(const IPInfo &info) const
+void NetworkDialog::startTextProgress()
 {
-    return u"<html><head/><body><p>"
-           u"<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">"
-           u"<tr><th>Field</th><th>Value</th></tr>"
-           u"<tr><td><b>IP</b></td><td>%1</td></tr>"
-           u"<tr><td><b>City</b></td><td>%2</td></tr>"
-           u"<tr><td><b>Region</b></td><td>%3</td></tr>"
-           u"<tr><td><b>Country</b></td><td>%4</td></tr>"
-           u"</table>"
-           u"</body></html>"_s
-        .arg(info.ip, info.city, info.region, info.country);
-}
+    if(!_enableProgress){
+        return;
+    }
+    // Initial progress
+    int *progress = new int(0);
 
+    // Initial progress bar with all squares as
+    QString progressBar = QStringLiteral("⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜");
+
+    // Timer to update progress every 150ms (15 sec total)
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [this, timer, progress, progressBar]() mutable {
+        if (*progress >= 100) {
+            timer->stop();
+            m_ui->netspeedData->setPlainText(QStringLiteral("\n\t\t    Progress: 100%\n\n\t\t  ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛\n\n\t\tSpeed Test Complete!"));
+            delete progress;  // Clean up dynamically allocated int
+        } else {
+            int blocksFilled = *progress / 10; // Determine how many blocks to replace
+
+            // Update progress bar
+            QString updatedBar;
+            for (int i = 0; i < 10; ++i) {
+                updatedBar += (i < blocksFilled) ? QStringLiteral("⬛") : QStringLiteral("⬜");
+            }
+
+            // Update display
+            m_ui->netspeedData->setPlainText(QStringLiteral("\n\t\t    Progress: %1%\n\n\t\t  %2").arg(*progress).arg(updatedBar));
+
+            // Increment progress
+            (*progress)++;
+        }
+    });
+
+    timer->start(700); // Runs every 150ms
+}
