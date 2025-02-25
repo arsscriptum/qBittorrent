@@ -184,7 +184,7 @@ MainWindow::MainWindow(IGUIApplication *app, const WindowState initialState, con
     m_ui->actionCheckForUpdates->setIcon(UIThemeManager::instance()->getIcon(u"view-refresh"_s));
 
     m_ui->actionNetworkInfo->setIcon(UIThemeManager::instance()->getIcon(u"network-server"_s));
-
+    m_ui->actionNetworkInfo->setVisible(true);
     m_ui->actionPauseSession->setVisible(!BitTorrent::Session::instance()->isPaused());
     m_ui->actionResumeSession->setVisible(BitTorrent::Session::instance()->isPaused());
     connect(BitTorrent::Session::instance(), &BitTorrent::Session::paused, this, [this]
