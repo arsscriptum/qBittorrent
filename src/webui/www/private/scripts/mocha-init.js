@@ -257,6 +257,50 @@ const initializeWindows = () => {
         });
     });
 
+    addClickEvent("vpnInfo", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const id = "vpnInfoPage";
+        new MochaUI.Window({
+            id: id,
+            icon: "images/vpn3.svg",
+            title: "QBT_TR(VPN INFOs)QBT_TR[CONTEXT=VpnDialog]",
+            loadMethod: "xhr",
+            contentURL: "views/netinfo.html",
+            maximizable: false,
+            paddingVertical: 0,
+            paddingHorizontal: 0,
+            width: loadWindowWidth(id, 900),
+            height: loadWindowHeight(id, 400),
+            onResize: () => {
+                saveWindowSize(id);
+            }
+        });
+    });
+    
+    addClickEvent("speedtest", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const id = "speedtestPage";
+        new MochaUI.Window({
+            id: id,
+            icon: "images/netspeed1.svg",
+            title: "QBT_TR(Speed Test)QBT_TR[CONTEXT=SpeedTestDialog]",
+            loadMethod: "xhr",
+            contentURL: "views/speedtest.html",
+            maximizable: false,
+            paddingVertical: 0,
+            paddingHorizontal: 0,
+            width: loadWindowWidth(id, 900),
+            height: loadWindowHeight(id, 400),
+            onResize: () => {
+                saveWindowSize(id);
+            }
+        });
+    });
+
     addClickEvent("upload", (e) => {
         e.preventDefault();
         e.stopPropagation();

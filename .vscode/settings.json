@@ -54,6 +54,10 @@
         "qprocess": "cpp",
         "__locale": "cpp",
         "qlibraryinfo": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "qmetaobject": "cpp",
+        "qresource": "cpp",
+        "qdatetime": "cpp",
+        "qsize": "cpp"
     }
 }

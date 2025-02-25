@@ -1,0 +1,43 @@
+<div id="vpnInfoContent">
+    <fieldset class="settings">
+        <legend>VPN INFO</legend>
+        <table>
+            <tbody>
+                <tr>
+                    <td rowspan="2">
+                        <img src="images/vpn3.svg" style="height: 2.5em;">
+                    </td>
+                    <td><label for="vpn_ip">IP</label></td>
+                    <td><input type="string" id="vpn_ip" style="width: 6em;"></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_city">City</label></td>
+                    <td><input type="string" id="vpn_city" style="width: 6em;"></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_region">Region</label></td>
+                    <td><input type="string" id="vpn_region" style="width: 6em;"></td>
+                </tr>
+            </tbody>
+    </fieldset>
+</div>
+
+
+
+<script>
+    "use strict";
+
+    window.qBittorrent ??= {};
+    window.qBittorrent.NetInfo ??= (() => {
+
+        const updateInfo = () => {
+
+            $("vpn_city") = "test";
+            $("vpn_ip") = "test";
+            $("vpn_region") = "test";
+
+        };
+    });
+
+    window.qBittorrent.NetInfo.updateInfo();
+</script>

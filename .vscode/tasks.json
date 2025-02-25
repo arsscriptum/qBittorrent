@@ -5,7 +5,7 @@
       "label": "Build Project - Development",
       "type": "shell",
       "command": "./scripts/build.sh",
-      "args": ["--debug", "--gui"],
+      "args": ["--release"],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -34,7 +34,7 @@
     {
       "label": "Run_Project",
       "type": "shell",
-      "command": "/home/gp/dev/qBittorrent/build/qbittorrent",
+      "command": "/home/gp/dev/qBittorrent/build/qbittorrent-nox",
       "group": {
         "kind": "run",
         "isDefault": false

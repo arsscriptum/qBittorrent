@@ -389,6 +389,16 @@ td.speedLabel {
     white-space: nowrap;
 }
 
+#vpnInfo {
+    white-space: nowrap;
+    color:  #ff4455;
+}
+
+#speedtestInfo {
+    white-space: nowrap;
+    color:  #aa1155;
+}
+
 #DHTNodes {
     white-space: nowrap;
 }

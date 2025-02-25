@@ -971,12 +971,12 @@ window.addEventListener("DOMContentLoaded", () => {
             + window.qBittorrent.Client.mainTitle();
 
         $("freeSpaceOnDisk").textContent = "QBT_TR(Free space: %1)QBT_TR[CONTEXT=HttpServer]".replace("%1", window.qBittorrent.Misc.friendlyUnit(serverState.free_space_on_disk));
-
+        
         const externalIPsElement = document.getElementById("externalIPs");
         if (window.qBittorrent.Cache.preferences.get().status_bar_external_ip) {
             const lastExternalAddressV4 = serverState.last_external_address_v4;
             const lastExternalAddressV6 = serverState.last_external_address_v6;
-            const hasIPv4Address = lastExternalAddressV4 !== "";
+            const hasIPv4Address = true;
             const hasIPv6Address = lastExternalAddressV6 !== "";
             let lastExternalAddressLabel = "QBT_TR(External IP: N/A)QBT_TR[CONTEXT=HttpServer]";
             if (hasIPv4Address && hasIPv6Address)

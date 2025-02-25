@@ -96,13 +96,14 @@
                             <li><a id="preferencesLink"><img class="MyMenuIcon" src="images/configure.svg" alt="QBT_TR(Options...)QBT_TR[CONTEXT=MainWindow]" width="16" height="16">QBT_TR(Options...)QBT_TR[CONTEXT=MainWindow]</a></li>
                             <li><a id="registerMagnetHandlerLink"><img class="MyMenuIcon" src="images/torrent-magnet.svg" alt="QBT_TR(Register to handle magnet links...)QBT_TR[CONTEXT=HttpServer]" width="16" height="16">QBT_TR(Register to handle magnet links...)QBT_TR[CONTEXT=HttpServer]</a></li>
                             <li><a id="manageCookiesLink"><img class="MyMenuIcon" src="images/browser-cookies.svg" alt="QBT_TR(Manage Cookies...)QBT_TR[CONTEXT=MainWindow]" width="16" height="16">QBT_TR(Manage Cookies...)QBT_TR[CONTEXT=MainWindow]</a></li>
+                            <li class="divider"><a id="vpnInfoLink"><img class="MyMenuIcon" src="images/vpn3.svg" alt="QBT_TR(VPN Exit Node)QBT_TR[CONTEXT=MainWindow]" width="16" height="16">QBT_TR(VPN Exit Node)QBT_TR[CONTEXT=MainWindow]</a></li>
+                            <li><a id="speedtestLink"><img class="MyMenuIcon" src="images/netspeed1.svg" alt="QBT_TR(Network Speed)QBT_TR[CONTEXT=MainWindow]" width="16" height="16">QBT_TR(Network Speed)QBT_TR[CONTEXT=MainWindow]</a></li>
                         </ul>
                     </li>
                     <li>
                         <a class="returnFalse">QBT_TR(Help)QBT_TR[CONTEXT=MainWindow]</a>
                         <ul>
                             <li><a id="docsLink" target="_blank" href="https://wiki.qbittorrent.org/"><img class="MyMenuIcon" src="images/help-contents.svg" alt="QBT_TR(Documentation)QBT_TR[CONTEXT=MainWindow]" width="16" height="16">QBT_TR(Documentation)QBT_TR[CONTEXT=MainWindow]</a></li>
-                            <li class="divider"><a id="bugLink" target="_blank" href="https://www.qbittorrent.org/donate"><img class="MyMenuIcon" src="images/wallet-open.svg" alt="QBT_TR(Donate!)QBT_TR[CONTEXT=MainWindow]" width="16" height="16">QBT_TR(Donate!)QBT_TR[CONTEXT=MainWindow]</a></li>
                             <li><a id="aboutLink"><img class="MyMenuIcon" src="images/help-about.svg" alt="QBT_TR(About)QBT_TR[CONTEXT=MainWindow]" width="16" height="16">QBT_TR(About)QBT_TR[CONTEXT=MainWindow]</a></li>
                         </ul>
                     </li>
@@ -149,6 +150,7 @@
                         <option value="save_path">QBT_TR(Save Path)QBT_TR[CONTEXT=MainWindow]</option>
                     </select>
                 </div>
+                <a id="networkInformationButton"><img class="mochaToolButton" title="Network Information" src="images/vpn2.svg" alt="Network Information" width="24" height="24"></a>
             </div>
         </div>
         <div id="pageWrapper">
@@ -278,6 +280,10 @@
             <table style="position: absolute; right: 5px;">
                 <tbody>
                     <tr>
+                        <td id="speedtestInfo"></td>
+                        <td class="statusBarSeparator"></td>
+                        <td id="vpnInfo"></td>
+                        <td class="statusBarSeparator"></td>
                         <td id="freeSpaceOnDisk"></td>
                         <td class="statusBarSeparator invisible"></td>
                         <td id="externalIPs" class="invisible"></td>

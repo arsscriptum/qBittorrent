@@ -29,6 +29,17 @@
         <file>private/images/checked-completed.svg</file>
         <file>private/images/collapse.svg</file>
         <file>private/images/configure.svg</file>
+        <file>private/images/netspeed.svg</file>
+        <file>private/images/netspeed1.svg</file>
+        <file>private/images/netspeed2.svg</file>
+        <file>private/images/vpn.svg</file>
+        <file>private/images/vpn1.svg</file>
+        <file>private/images/vpn2.svg</file>
+        <file>private/images/vpn3.svg</file>
+        <file>private/images/pirate1.svg</file>
+        <file>private/images/pirate2.svg</file>
+        <file>private/images/ip.svg</file>
+        <file>private/images/hack.svg</file>
         <file>private/images/connected.svg</file>
         <file>private/images/dialog-warning.svg</file>
         <file>private/images/directory.svg</file>
@@ -428,6 +439,8 @@
         <file>private/views/confirmdeletion.html</file>
         <file>private/views/confirmRecheck.html</file>
         <file>private/views/cookies.html</file>
+        <file>private/views/netinfo.html</file>
+        <file>private/views/speedtest.html</file>
         <file>private/views/filters.html</file>
         <file>private/views/installsearchplugin.html</file>
         <file>private/views/log.html</file>

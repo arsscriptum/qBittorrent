@@ -96,6 +96,39 @@ private:
     QSet<BitTorrent::TorrentID> m_updatedTorrents;
     QSet<BitTorrent::TorrentID> m_removedTorrents;
 
+    struct IPInfo
+    {
+        QString ip;
+        QString city;
+        QString region;
+        QString country;
+        QString org;
+        QString loc;
+
+        // Convert IPInfo to a const QString
+        QString toQString() const
+        {
+            return QStringLiteral("IP: %1\nCity: %2\nRegion: %3\nCountry: %4")
+                .arg(ip, city, region, country);
+        }
+    };
+    struct SpeedTestResult
+    {
+        double downloadSpeed;  // in bits per second
+        double uploadSpeed;    // in bits per second
+        double ping;           // in milliseconds
+
+        // Server Information
+        QString serverName;
+        QString serverCity;
+        QString serverCountry;
+        double serverLatency;
+
+        // Client Information
+        QString clientIP;
+        QString clientISP;
+    };
+
     struct MaindataSyncBuf
     {
         QHash<QString, QVariantMap> categories;
@@ -109,6 +142,9 @@ private:
         QStringList removedTorrents;
         QStringList removedTrackers;
     };
+
+    SpeedTestResult m_speedtestInfo;
+    IPInfo m_vpnipInfo;
 
     MaindataSyncBuf m_maindataSnapshot;
     MaindataSyncBuf m_maindataSyncBuf;
