@@ -171,17 +171,6 @@ namespace
 #endif
 }
 
-void customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
-    QString file_path = QStringLiteral("/home/gp/tmp/qbittorrent_debug.log");
-    QFile logFile(file_path);
-    if (logFile.open(QIODevice::Append | QIODevice::Text))
-    {
-        QTextStream out(&logFile);
-        out << msg << "\n";
-    }
-}
-
 
 // Main
 int main(int argc, char *argv[])
@@ -195,8 +184,6 @@ int main(int argc, char *argv[])
     adjustFileDescriptorLimit();
 #endif
 
-    qInstallMessageHandler(customMessageHandler);
-     qDebug() << "This will be logged to debug.log";
     // We must save it here because QApplication constructor may change it
     const bool isOneArg = (argc == 2);
 
