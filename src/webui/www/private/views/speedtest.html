@@ -1,25 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Test Results</title>
+    <style>
+        fieldset {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            width: fit-content;
+        }
+        table {
+            width: 100%;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            border: 1px solid #717171;
+            padding: 5px;
+            width: 20em;
+            background: #bbbbbb;
+        }
+    </style>
+</head>
+<body>
+
 <div id="speedtestContent">
     <fieldset class="settings">
         <legend>Current Speed Test Results</legend>
         <table>
             <tbody>
                 <tr>
-                    <td rowspan="2">
-                        <img src="images/slow_off.svg" style="height: 2.5em;" >
+                    <td rowspan="11">
+                        <img id="speedtestImage" src="images/netspeed2.svg" style="height: 2.5em;">
                     </td>
-                    <td><label for="u">QBT_TR(Upload:)QBT_TR[CONTEXT=SpeedTestDialog]</label></td>
-                    <td><input type="number" id="u" style="width: 6em;" min="0">&nbsp;&nbsp;(KiB/s)</td>
+                    <td><label for="speed_status">Status</label></td>
+                    <td><input type="text" id="speed_status" readonly></td>
                 </tr>
                 <tr>
-                    <td><label for="d">QBT_TR(Download:)QBT_TR[CONTEXT=SpeedTestDialog]</label></td>
-                    <td><input type="number" id="d" style="width: 6em;" min="0" value="109">&nbsp;&nbsp;(KiB/s)</td>
+                    <td><label for="speed_download">Download Speed</label></td>
+                    <td><input type="text" id="speed_download" readonly></td>
                 </tr>
                 <tr>
-                    <td><label for="d">Server Name</label></td>
-                    <td><input type="string" id="d" style="width: 6em;" min="0" value="server"></td>
+                    <td><label for="speed_upload">Upload Speed</label></td>
+                    <td><input type="text" id="speed_upload" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_ping">Ping</label></td>
+                    <td><input type="text" id="speed_ping" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_server_name">Server Name</label></td>
+                    <td><input type="text" id="speed_server_name" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_server_country">Server Country</label></td>
+                    <td><input type="text" id="speed_server_country" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_server_sponsor">Server Sponsor</label></td>
+                    <td><input type="text" id="speed_server_sponsor" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_latency">Server Latency</label></td>
+                    <td><input type="text" id="speed_latency" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_client_ip">Client IP</label></td>
+                    <td><input type="text" id="speed_client_ip" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_client_isp">Client ISP</label></td>
+                    <td><input type="text" id="speed_client_isp" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="speed_timestamp">Timestamp</label></td>
+                    <td><input type="text" id="speed_timestamp" readonly></td>
                 </tr>
             </tbody>
         </table>
     </fieldset>
 </div>
 
+<script>
+    "use strict";
+
+    async function updateSpeedTestInfo() {
+        console.log("Fetching Speed Test info from http://mini:8080/api/v2/net/getNetSpeed...");
+
+        try {
+            const response = await fetch("http://mini:8080/api/v2/net/getNetSpeed");
+            console.log("Response received:", response);
+
+            if (!response.ok) throw new Error("Failed to fetch Speed Test info");
+
+            const data = await response.json();
+            console.log("Fetched Data:", data);
+
+            // Check if test is in progress
+            if (data.state === "InProgress") {
+                document.getElementById("speed_status").value = "In Progress...";
+                document.getElementById("speedtestImage").src = "images/waiting.gif";
+            } else {
+                document.getElementById("speed_status").value = "Completed";
+                document.getElementById("speedtestImage").src = "images/netspeed2.svg";
+            }
+
+            // Update input fields
+            document.getElementById("speed_download").value = (data.download / 1e6).toFixed(2) + " Mbps" || "N/A";
+            document.getElementById("speed_upload").value = (data.upload / 1e6).toFixed(2) + " Mbps" || "N/A";
+            document.getElementById("speed_ping").value = data.ping + " ms" || "N/A";
+            document.getElementById("speed_server_name").value = data.server.name || "N/A";
+            document.getElementById("speed_server_country").value = data.server.country || "N/A";
+            document.getElementById("speed_server_sponsor").value = data.server.sponsor || "N/A";
+            document.getElementById("speed_latency").value = data.server.latency + " ms" || "N/A";
+            document.getElementById("speed_client_ip").value = data.client.ip || "N/A";
+            document.getElementById("speed_client_isp").value = data.client.isp || "N/A";
+            document.getElementById("speed_timestamp").value = data.timestamp || "N/A";
+
+            console.log("Speed Test Info updated successfully.");
+
+        } catch (error) {
+            console.error("Error fetching Speed Test info:", error);
+        }
+    }
+
+    // Force execution when the script loads
+    console.log("Forcing updateSpeedTestInfo() execution...");
+    updateSpeedTestInfo();
+
+    // Ensure execution again when the page fully loads
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("DOM fully loaded. Running updateSpeedTestInfo() again...");
+        updateSpeedTestInfo();
+    });
+</script>
+
+</body>
+</html>

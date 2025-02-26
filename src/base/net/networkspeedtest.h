@@ -12,6 +12,13 @@ class NetworkSpeedTest : public QObject
     Q_OBJECT
 
 public:
+    // Enum for request state
+    enum class RequestState {
+        Idle,
+        InProgress,
+        Completed
+    };
+
     // Singleton instance
     static NetworkSpeedTest &instance()
     {
@@ -25,7 +32,10 @@ public:
 
     void runSpeedTest();
 
+    // Getters for speed test info and new state variables
     SpeedTestInfo getSpeedTestResults() const { return m_speedtestInfo; }
+    RequestState currentState() const { return m_state; }
+    bool hasReceivedData() const { return m_receivedData; }
 
 signals:
     void sigSpeedTestCompleted(const QString &result);
@@ -37,6 +47,9 @@ private slots:
 private:
     explicit NetworkSpeedTest(QObject *parent = nullptr); // Private constructor
     ~NetworkSpeedTest() override; // Destructor
+
     SpeedTestInfo m_speedtestInfo;
     QProcess *m_process = nullptr;
+    RequestState m_state = RequestState::Idle;  // Default state
+    bool m_receivedData = false;  // Tracks if data has been received at least once
 };

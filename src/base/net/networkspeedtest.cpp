@@ -5,7 +5,7 @@
 
 // Private Constructor (Singleton)
 NetworkSpeedTest::NetworkSpeedTest(QObject *parent) 
-    : QObject(parent), m_process(new QProcess(this))
+    : QObject(parent), m_process(new QProcess(this)), m_state(RequestState::Idle), m_receivedData(false)
 {
     connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &NetworkSpeedTest::onProcessTerminated);
@@ -24,7 +24,14 @@ NetworkSpeedTest::~NetworkSpeedTest()
 // Run Speed Test
 void NetworkSpeedTest::runSpeedTest()
 {
+    if (m_state == RequestState::InProgress) {
+        LogMsg(tr("NetworkSpeedTest::runSpeedTest() - Speed test already in progress."));
+        return;
+    }
+
     LogMsg(tr("NetworkSpeedTest::runSpeedTest() - Starting speed test..."));
+
+    m_state = RequestState::InProgress;  // Update state
 
     QString exePath = QStringLiteral("/usr/bin/speedtest-cli");
     QStringList argList;
@@ -35,6 +42,7 @@ void NetworkSpeedTest::runSpeedTest()
     if (!m_process->waitForStarted()) {
         LogMsg(tr("NetworkSpeedTest::runSpeedTest() - Error: Could not start speedtest-cli."));
         emit sigSpeedTestFailed(QStringLiteral("Error: Could not start speedtest-cli."));
+        m_state = RequestState::Idle;  // Reset state on failure
     } else {
         LogMsg(tr("NetworkSpeedTest::runSpeedTest() - Process Started"));
     }
@@ -48,6 +56,7 @@ void NetworkSpeedTest::onProcessTerminated(int exitCode, QProcess::ExitStatus ex
     if (exitStatus == QProcess::CrashExit || exitCode != 0) {
         LogMsg(tr("NetworkSpeedTest::onProcessTerminated() - Process crashed or exited with error."));
         emit sigSpeedTestFailed(QStringLiteral("Speed test failed."));
+        m_state = RequestState::Idle;  // Reset state on failure
         return;
     }
 
@@ -61,23 +70,32 @@ void NetworkSpeedTest::onProcessTerminated(int exitCode, QProcess::ExitStatus ex
     if (!jsonDoc.isObject()) {
         LogMsg(tr("NetworkSpeedTest::onProcessTerminated() - Invalid JSON output."));
         emit sigSpeedTestFailed(QStringLiteral("Invalid JSON output from speedtest."));
+        m_state = RequestState::Idle;  // Reset state on failure
         return;
     }
 
     QJsonObject jsonObj = jsonDoc.object();
 
     // Extract values
-    SpeedTestInfo result;
-    result.fromQJsonObject(jsonObj);
+    m_speedtestInfo.fromQJsonObject(jsonObj);
 
-    if (result.download() < 0) {
+    if (m_speedtestInfo.download() < 0) {
         LogMsg(tr("NetworkSpeedTest::onProcessTerminated() - Download speed missing in JSON."));
         emit sigSpeedTestFailed(QStringLiteral("Download speed not available."));
+        m_state = RequestState::Idle;  // Reset state on failure
         return;
     }
 
+    // Mark that data has been received for the first time
+    if (!m_receivedData) {
+        m_receivedData = true;
+    }
+
+    // Update state
+    m_state = RequestState::Completed;
+
     // Generate HTML result
-    QString htmlResult = result.toHTML();
+    QString htmlResult = m_speedtestInfo.toHTML();
     LogMsg(tr("NetworkSpeedTest::onProcessTerminated() - Final result generated."));
 
     // Emit signal with HTML result

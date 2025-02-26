@@ -55,7 +55,6 @@ private slots:
     void getIpInfoAction();
     void refreshIpInfoAction();
     void refreshNetSpeedAction();
-    
     void getNetSpeedAction();
     void handleSpeedTestCompleted(const QString &result);
     void handleSpeedTestFailed(const QString &errorMessage);
