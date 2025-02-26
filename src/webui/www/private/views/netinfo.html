@@ -83,7 +83,13 @@
         console.log("Fetching VPN info from http://mini:8080/api/v2/net/getIpInfo...");
 
         try {
-            const response = await fetch("http://mini:8080/api/v2/net/getIpInfo");
+            const response = await fetch("http://mini:8080/api/v2/net/refreshIpInfo", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "force=true"
+            });
             console.log("Response received:", response);
 
             if (!response.ok) throw new Error("Failed to fetch VPN info");
