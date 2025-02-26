@@ -103,9 +103,12 @@
             if (data.state === "InProgress") {
                 document.getElementById("speed_status").value = "In Progress...";
                 document.getElementById("speedtestImage").src = "images/waiting.gif";
-            } else {
+            } else if (data.state === "Completed") {
                 document.getElementById("speed_status").value = "Completed";
                 document.getElementById("speedtestImage").src = "images/netspeed2.svg";
+            } else {
+                document.getElementById("speed_status").value = "Idle";
+                document.getElementById("speedtestImage").src = "images/netspeed.svg";
             }
 
             // Update input fields
