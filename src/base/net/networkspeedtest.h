@@ -25,6 +25,7 @@ public:
         if(pInstance == nullptr)
         {
             pInstance = new NetworkSpeedTest();
+            pInstance->runSpeedTest(true);
         } 
         return *pInstance;
     }
@@ -33,7 +34,7 @@ public:
     NetworkSpeedTest(const NetworkSpeedTest &) = delete;
     NetworkSpeedTest &operator=(const NetworkSpeedTest &) = delete;
 
-    void runSpeedTest();
+    void runSpeedTest(bool force = false);
 
     // Getters for speed test info and new state variables
     SpeedTestInfo getSpeedTestResults() const { return m_speedtestInfo; }

@@ -46,23 +46,19 @@ using Utils::String::parseBool;
 #include "base/net/ipgeolocation.h"
 #include <QDebug>
 
-// Constructor - Fix by matching APIController's constructor
+// Constructor - Fix by matching APIController's constructo
 NETController::NETController(IApplication *app, QObject *parent)
     : APIController(app, parent), m_updated(false)  // Call base class constructor correctly
 {
-    qDebug() << "NETController initialized.";
-    refreshNetSpeedAction();
-    refreshIpInfoAction();
+    LogMsg(tr("NETController::NETController"));
 }
 
 // Destructor - Fix by overriding virtual destructor
 NETController::~NETController()
 {
-    qDebug() << "NETController destroyed.";
-
-    // Get the singleton instance of IPGeoLocation
-
+    LogMsg(tr("NETController::destroyed"));
 }
+    // Get the singleton instance of IPGeoLocation
 
 
 void NETController::getIpInfoAction()
@@ -75,6 +71,9 @@ void NETController::getIpInfoAction()
 
 void NETController::refreshIpInfoAction()
 {
+    const std::optional<bool> doForce = parseBool(params()[u"force"_s]);
+
+
     IPGeoLocation &geo = IPGeoLocation::instance();
         // Connect signals for success and failure handling
     connect(&geo, &IPGeoLocation::sigRequestCompleted, 
@@ -84,7 +83,7 @@ void NETController::refreshIpInfoAction()
             this, &NETController::handleGeoLocationFailed);
 
     LogMsg(tr("NETController::refreshIpInfoAction"));
-    IPGeoLocation::instance().doRequest(true);
+    IPGeoLocation::instance().doRequest(doForce.value_or(false));
     m_updated = false;
     static QDateTime sentTime; // Stores the last request timestamp
 
@@ -115,6 +114,8 @@ void NETController::getNetSpeedAction()
 
 void NETController::refreshNetSpeedAction()
 {
+    const std::optional<bool> doForce = parseBool(params()[u"force"_s]);
+
     NetworkSpeedTest &netTester = NetworkSpeedTest::instance();
         // Connect signals for success and failure handling
     // Connect signals from NetworkSpeedTest to slots in NetworkDialog
@@ -125,7 +126,8 @@ void NETController::refreshNetSpeedAction()
             this, &NETController::handleSpeedTestFailed);
 
     LogMsg(tr("NETController::refreshNetSpeedAction"));
-    NetworkSpeedTest::instance().runSpeedTest();
+    NetworkSpeedTest::instance().runSpeedTest(doForce.value_or(false));
+
     m_updated = false;
     static QDateTime sentTime; // Stores the last request timestamp
 
@@ -138,8 +140,9 @@ void NETController::refreshNetSpeedAction()
         }
         QThread::usleep(150000);  // Sleep for 150 millisecond
     }
-    const IPInfo ipinfo = IPGeoLocation::instance().getIpInfo();
-    setResult(ipinfo.toQJsonObject());
+    const SpeedTestInfo results = NetworkSpeedTest::instance().getSpeedTestResults();
+    LogMsg(tr("NETController::refreshNetSpeedAction %1").arg(results.toQString()));
+    setResult(results.toQJsonObject());
 }   
 
 

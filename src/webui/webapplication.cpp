@@ -69,7 +69,7 @@
 #include "api/torrentscontroller.h"
 #include "api/transfercontroller.h"
 #include "freediskspacechecker.h"
-
+#include "base/logger.h"
 const int MAX_ALLOWED_FILESIZE = 10 * 1024 * 1024;
 const QString DEFAULT_SESSION_COOKIE_NAME = u"SID"_s;
 

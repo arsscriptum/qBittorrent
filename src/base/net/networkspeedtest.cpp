@@ -22,8 +22,16 @@ NetworkSpeedTest::~NetworkSpeedTest()
 }
 
 // Run Speed Test
-void NetworkSpeedTest::runSpeedTest()
+void NetworkSpeedTest::runSpeedTest(bool force)
 {
+    static QDateTime lastRequestTime; // Stores the last request timestamp
+
+    // Check if at least 5 minutes (300 seconds) have passed since the last request
+    if (!force && lastRequestTime.isValid() && lastRequestTime.secsTo(QDateTime::currentDateTime()) < 300) {
+        LogMsg(tr("NetworkSpeedTest::doRequest() Skipping request, last request was too recent."));
+        return; // Skip the request if it's too soon
+    }
+
     if (m_state == RequestState::InProgress) {
         LogMsg(tr("NetworkSpeedTest::runSpeedTest() - Speed test already in progress."));
         return;

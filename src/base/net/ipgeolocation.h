@@ -22,6 +22,7 @@ public:
         if(pInstance == nullptr)
         {
             pInstance = new IPGeoLocation();
+            pInstance->doRequest(true);
         } 
         return *pInstance;
     }
