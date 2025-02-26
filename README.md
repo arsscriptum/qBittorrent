@@ -81,3 +81,23 @@ Refer to the [INSTALL](INSTALL) file.
 |  **1.3.0**  |        ⏳       |       ♒︎       |      ♒︎     |
 |  **1.4.0**  |        ⏳       |       ♒︎       |      ♒︎     |
 |  **1.5.0**  |        ⏳       |       ♒︎       |      ♒︎     |
+
+
+
+
+
+## Added Functionalities
+
+![menu](doc/img/menu.png)
+
+### Get External IP Address
+
+![ip](doc/img/ip.png)
+
+### Speed Test
+
+![st](doc/img/st.png)
+
+## Test
+
+![test](doc/img/test.gif)

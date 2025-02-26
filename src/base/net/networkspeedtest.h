@@ -22,8 +22,11 @@ public:
     // Singleton instance
     static NetworkSpeedTest &instance()
     {
-        static NetworkSpeedTest instance;
-        return instance;
+        if(pInstance == nullptr)
+        {
+            pInstance = new NetworkSpeedTest();
+        } 
+        return *pInstance;
     }
 
     // Delete copy constructor & assignment to enforce singleton
@@ -45,6 +48,7 @@ private slots:
     void onProcessTerminated(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
+    static NetworkSpeedTest *pInstance;
     explicit NetworkSpeedTest(QObject *parent = nullptr); // Private constructor
     ~NetworkSpeedTest() override; // Destructor
 

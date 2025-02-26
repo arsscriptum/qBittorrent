@@ -19,8 +19,11 @@ public:
     // Get the singleton instance
     static IPGeoLocation &instance()
     {
-        static IPGeoLocation instance;
-        return instance;
+        if(pInstance == nullptr)
+        {
+            pInstance = new IPGeoLocation();
+        } 
+        return *pInstance;
     }
 
     // Delete copy constructor & assignment operator to enforce singleton pattern
@@ -40,6 +43,7 @@ private slots:
     void onProcessTerminated(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
+    static IPGeoLocation *pInstance;
     // Private constructor to prevent external instantiation
     explicit IPGeoLocation(QObject *parent = nullptr);
 

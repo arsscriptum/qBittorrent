@@ -2,7 +2,7 @@
 #include "base/global.h"
 #include "base/logger.h"
 #include "speedtestinfo.h"
-
+NetworkSpeedTest *NetworkSpeedTest::pInstance = nullptr;
 // Private Constructor (Singleton)
 NetworkSpeedTest::NetworkSpeedTest(QObject *parent) 
     : QObject(parent), m_process(new QProcess(this)), m_state(RequestState::Idle), m_receivedData(false)

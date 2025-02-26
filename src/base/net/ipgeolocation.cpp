@@ -16,6 +16,7 @@
 #include "base/logger.h"
 
 
+IPGeoLocation *IPGeoLocation::pInstance = nullptr;
 
 IPGeoLocation::IPGeoLocation(QObject *parent) 
     : QObject(parent), m_process(new QProcess(this))
