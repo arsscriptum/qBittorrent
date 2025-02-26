@@ -58,6 +58,22 @@
         "qmetaobject": "cpp",
         "qresource": "cpp",
         "qdatetime": "cpp",
-        "qsize": "cpp"
+        "qsize": "cpp",
+        "qjsonarray": "cpp",
+        "qjsonobject": "cpp",
+        "qjsonvalue": "cpp",
+        "qdebug": "cpp",
+        "string_view": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "limits": "cpp",
+        "concepts": "cpp",
+        "qregularexpression": "cpp",
+        "qfileinfo": "cpp",
+        "qnetworkcookie": "cpp",
+        "ios": "cpp",
+        "qjsondocument": "cpp"
     }
 }

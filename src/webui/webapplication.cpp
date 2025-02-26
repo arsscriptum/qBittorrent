@@ -62,6 +62,7 @@
 #include "api/authcontroller.h"
 #include "api/logcontroller.h"
 #include "api/rsscontroller.h"
+#include "api/netcontroller.h"
 #include "api/searchcontroller.h"
 #include "api/synccontroller.h"
 #include "api/torrentcreatorcontroller.h"
@@ -467,9 +468,10 @@ void WebApplication::configure()
     const QString contentSecurityPolicy =
         (m_isAltUIUsed
             ? QString()
-            : u"default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-src 'self' blob:;"_s)
+            : u"default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; frame-src 'self' blob:; connect-src 'self' http://mini:8080;"_s)
         + (isClickjackingProtectionEnabled ? u" frame-ancestors 'self';"_s : QString())
         + (m_isHttpsEnabled ? u" upgrade-insecure-requests;"_s : QString());
+
     if (!contentSecurityPolicy.isEmpty())
         m_prebuiltHeaders.push_back({Http::HEADER_CONTENT_SECURITY_POLICY, contentSecurityPolicy});
 
@@ -730,11 +732,11 @@ void WebApplication::sessionStart()
 
     m_currentSession = new WebSession(generateSid(), app());
     m_sessions[m_currentSession->id()] = m_currentSession;
-
     m_currentSession->registerAPIController(u"app"_s, new AppController(app(), m_currentSession));
     m_currentSession->registerAPIController(u"log"_s, new LogController(app(), m_currentSession));
     m_currentSession->registerAPIController(u"torrentcreator"_s, new TorrentCreatorController(m_torrentCreationManager, app(), m_currentSession));
     m_currentSession->registerAPIController(u"rss"_s, new RSSController(app(), m_currentSession));
+    m_currentSession->registerAPIController(u"net"_s,new NETController(app(), m_currentSession) );
     m_currentSession->registerAPIController(u"search"_s, new SearchController(app(), m_currentSession));
     m_currentSession->registerAPIController(u"torrents"_s, new TorrentsController(app(), m_currentSession));
     m_currentSession->registerAPIController(u"transfer"_s, new TransferController(app(), m_currentSession));

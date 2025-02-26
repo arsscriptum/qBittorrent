@@ -1,43 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Info</title>
+    <style>
+        fieldset {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            width: fit-content;
+        }
+        table {
+            width: 100%;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            border: 1px solid #717171;
+            padding: 5px;
+            width: 20em;
+            background: #bbbbbb;
+        }
+    </style>
+</head>
+<body>
+
 <div id="vpnInfoContent">
     <fieldset class="settings">
         <legend>VPN INFO</legend>
         <table>
             <tbody>
                 <tr>
-                    <td rowspan="2">
+                    <td rowspan="9">
                         <img src="images/vpn3.svg" style="height: 2.5em;">
                     </td>
                     <td><label for="vpn_ip">IP</label></td>
-                    <td><input type="string" id="vpn_ip" style="width: 6em;"></td>
+                    <td><input type="text" id="vpn_ip" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_hostname">Hostname</label></td>
+                    <td><input type="text" id="vpn_hostname" readonly></td>
                 </tr>
                 <tr>
                     <td><label for="vpn_city">City</label></td>
-                    <td><input type="string" id="vpn_city" style="width: 6em;"></td>
+                    <td><input type="text" id="vpn_city" readonly></td>
                 </tr>
                 <tr>
                     <td><label for="vpn_region">Region</label></td>
-                    <td><input type="string" id="vpn_region" style="width: 6em;"></td>
+                    <td><input type="text" id="vpn_region" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_country">Country</label></td>
+                    <td><input type="text" id="vpn_country" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_loc">Location</label></td>
+                    <td><input type="text" id="vpn_loc" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_org">Organization</label></td>
+                    <td><input type="text" id="vpn_org" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_postal">Postal Code</label></td>
+                    <td><input type="text" id="vpn_postal" readonly></td>
+                </tr>
+                <tr>
+                    <td><label for="vpn_timezone">Timezone</label></td>
+                    <td><input type="text" id="vpn_timezone" readonly></td>
                 </tr>
             </tbody>
+        </table>
     </fieldset>
 </div>
-
-
 
 <script>
     "use strict";
 
-    window.qBittorrent ??= {};
-    window.qBittorrent.NetInfo ??= (() => {
+    async function updateVPNInfo() {
+        console.log("Fetching VPN info from http://mini:8080/api/v2/net/getIpInfo...");
 
-        const updateInfo = () => {
+        try {
+            const response = await fetch("http://mini:8080/api/v2/net/getIpInfo");
+            console.log("Response received:", response);
 
-            $("vpn_city") = "test";
-            $("vpn_ip") = "test";
-            $("vpn_region") = "test";
+            if (!response.ok) throw new Error("Failed to fetch VPN info");
 
-        };
+            const data = await response.json();
+            console.log("Fetched Data:", data);
+
+            // Update input fields
+            document.getElementById("vpn_ip").value = data.ip || "N/A";
+            document.getElementById("vpn_hostname").value = data.hostname || "N/A";
+            document.getElementById("vpn_city").value = data.city || "N/A";
+            document.getElementById("vpn_region").value = data.region || "N/A";
+            document.getElementById("vpn_country").value = data.country || "N/A";
+            document.getElementById("vpn_loc").value = data.loc || "N/A";
+            document.getElementById("vpn_org").value = data.org || "N/A";
+            document.getElementById("vpn_postal").value = data.postal || "N/A";
+            document.getElementById("vpn_timezone").value = data.timezone || "N/A";
+
+            console.log("VPN Info updated successfully.");
+
+        } catch (error) {
+            console.error("Error fetching VPN info:", error);
+        }
+    }
+
+    // Force execution when the script loads
+    console.log("Forcing updateVPNInfo() execution...");
+    updateVPNInfo();
+
+    // Ensure execution again when the page fully loads
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("DOM fully loaded. Running updateVPNInfo() again...");
+        updateVPNInfo();
     });
-
-    window.qBittorrent.NetInfo.updateInfo();
 </script>
+
+</body>
+</html>

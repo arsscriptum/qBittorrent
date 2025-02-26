@@ -6,7 +6,7 @@ add_library(qbt_webui STATIC
     api/authcontroller.h
     api/isessionmanager.h
     api/logcontroller.h
-    api/rsscontroller.h
+    api/netcontroller.h
     api/searchcontroller.h
     api/synccontroller.h
     api/torrentcreatorcontroller.h
@@ -24,6 +24,7 @@ add_library(qbt_webui STATIC
     api/authcontroller.cpp
     api/logcontroller.cpp
     api/rsscontroller.cpp
+    api/netcontroller.cpp
     api/searchcontroller.cpp
     api/synccontroller.cpp
     api/torrentcreatorcontroller.cpp

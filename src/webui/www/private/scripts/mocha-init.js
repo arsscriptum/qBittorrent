@@ -265,7 +265,7 @@ const initializeWindows = () => {
         new MochaUI.Window({
             id: id,
             icon: "images/vpn3.svg",
-            title: "QBT_TR(VPN INFOs)QBT_TR[CONTEXT=VpnDialog]",
+            title: "QBT_TR(External IP Address Information)QBT_TR[CONTEXT=VpnDialog]",
             loadMethod: "xhr",
             contentURL: "views/netinfo.html",
             maximizable: false,

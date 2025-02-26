@@ -46,7 +46,6 @@ add_library(qbt_gui STATIC
     advancedsettings.h
     autoexpandabledialog.h
     banlistoptionsdialog.h
-    ipgeolocation.h
     color.h
     colorscheme.h
     cookiesdialog.h
@@ -72,7 +71,6 @@ add_library(qbt_gui STATIC
     mainwindow.h
     networkdialog.h
     optionsdialog.h
-    networkspeedtest.h
     powermanagement/inhibitor.h
     powermanagement/powermanagement.h
     previewlistdelegate.h
@@ -172,8 +170,6 @@ add_library(qbt_gui STATIC
     log/logmodel.cpp
     mainwindow.cpp
     networkdialog.cpp
-    networkspeedtest.cpp
-    ipgeolocation.cpp
     optionsdialog.cpp
     powermanagement/inhibitor.cpp
     powermanagement/powermanagement.cpp

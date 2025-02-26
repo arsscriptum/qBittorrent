@@ -70,6 +70,10 @@ add_library(qbt_base STATIC
     net/downloadhandlerimpl.h
     net/downloadmanager.h
     net/geoipdatabase.h
+    net/ipgeolocation.h
+    net/speedtestinfo.h
+    net/ipinfo.h
+    net/networkspeedtest.h
     net/geoipmanager.h
     net/portforwarder.h
     net/proxyconfigurationmanager.h
@@ -167,6 +171,10 @@ add_library(qbt_base STATIC
     http/server.cpp
     logger.cpp
     net/dnsupdater.cpp
+    net/ipinfo.cpp
+    net/speedtestinfo.cpp
+    net/ipgeolocation.cpp
+    net/networkspeedtest.cpp
     net/downloadhandlerimpl.cpp
     net/downloadmanager.cpp
     net/geoipdatabase.cpp
