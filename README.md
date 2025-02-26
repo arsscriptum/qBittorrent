@@ -30,6 +30,16 @@ It can be used in standalone mode, but it's not supported.
    export PATH=~/Qt/6.x.x/gcc_64/bin:$PATH
    ```
 
+### Other Dependencies
+
+1. Boost >= 1.76
+2. libtorrent-rasterbar 1.2.19 - 1.2.x || 2.0.10 - 2.0.x
+3. OpenSSL >= 3.0.2
+4. zlib >= 1.2.11
+5. CMake >= 3.16
+6. Python >= 3.9.0. Optional, run-time only. Used by the bundled search engine
+
+
 ## Build 
 
 Make sure you have [Qt6 Installed](https://doc.qt.io/qt-6/get-and-install-qt.html) and export those paths:
@@ -39,54 +49,110 @@ export Qt6_DIR=/path/to/Qt/6.8.2/gcc_64/lib/cmake/Qt6
 export PATH=/path/to/Qt/6.8.2/gcc_64/bin:$PATH
 ```
 
+### Compile and install qBittorrent with Qt graphical interface
+
+```bash
+  $ cmake -B build -DCMAKE_BUILD_TYPE=Release
+  $ cmake --build build
+  $ cmake --install build
+  $ qbittorrent
+```
+  will install and execute qBittorrent.
+
+### Compile and install qBittorrent without Qt graphical interface
+
+```bash
+  $ cmake -B build -DCMAKE_BUILD_TYPE=Release -DGUI=OFF
+  $ cmake --build build
+  $ cmake --install build
+  $ qbittorrent-nox
+```
 
 ### Build using script
 
-```
-./scripts/build.sh
+There's a [script](./scripts/build.sh) I use to build. If you want a GUI application, use the ```--gui``` option. Else, it defaults to headless version (WEBUI).
+
+
+```bash
+Usage: ./scripts/build.sh [options]
+  -t, --target <Debug|Release>    Build target
+  -c, --clean                     Clean
+  -g, --gui                       Enable GUI
+  -n, --nomake                    No make, just configure
+  -h, --help                      Show this help message
+  -r, --release                   Release Build, headless
+  -d, --debug                     Debug Build, headless
 ```
 
+#### Build with Script - Headless
+
+```bash
+./scripts/build.sh --release
+```
+
+#### Build with Script - Gui
+
+```bash
+./scripts/build.sh --gui -t Debug
+```
 ![ss](doc/img/ss.png)
 
 #### Version generation
 
-Avoid version files generation to mess your commits:
+I wrote a script that updates the version build number everytime I build (helps identify what Im testing). To avoid version files generation to mess your commits:
 
 ```bash
 git update-index --assume-unchanged version.nfo
 git update-index --assume-unchanged build.nfo
 ```
 
-#### Build / Installation:
+## Installation
 
-Refer to the [INSTALL](INSTALL) file.
+I wrote an [install script](./scripts/install.sh) that will copy all dependencies to a install directory of your choice. It uses [ctdeployer](https://github.com/QuasarApp/CQtDeployer).
+
+If you don't have [ctdeployer](https://github.com/QuasarApp/CQtDeployer), you can quickly install it using the script by doing:
+
+```bash
+sudo ./scripts/install.sh --install-ctdeploy
+``` 
+
+This will get the package, verify the checksum and insatll it.
+
+Then install using
+
+```bash
+sudo ./scripts/install.sh
+``` 
+
+The install path is in **install**
+
 
 ## Features
 
 | **FEATURES**                            |  **STATUS** | **VERSION** | **DOCKERHUB** |
-|-----------------------------------------|:-----------:|:-----------:|:-------------:|
-| ➭ View IP Data in About Menu            |    🚧 wip    |      ♒︎      |       ❌       |
-| ➭ Read DHT bootstrap nodes from cfg     |    ✔️ done   |     1.0     |      1.0      |
-| ➭ Integrate speedtest-cli in build      |    ✔️ done   |     1.0     |      1.0      |
-| ➭ Add a menu to show speed test results | ⏳ whishlist |      ♒︎      |       ❌       |
-| ➭                                       |             |             |               |
-
+|-----------------------------------------|:-----------:|:----------:|:-------------:|
+| ➭ Display External Ip Address Info      |   ✔️ done   |     1.2     |    [1.2.0](https://hub.docker.com/repository/docker/arsscriptum/qbittorrentvpn/tags/1.2/sha256-eb4e39680cf805d838f765a137169f51463704ccab2dc66cfd700b1eb60178cd) |
+| ➭ Read DHT bootstrap nodes from cfg     |   ✔️ done   |     1.2     |      same     |
+| ➭ Integrate speedtest-cli in build      |   ✔️ done   |     1.2     |      same     |
+| ➭ Add a menu to show speed test results |   ✔️ done   |     1.2     |     same      |
+| ➭ Add WebAPI functions for network data |   ✔️ done   |     1.2     |     same      |
+| ➭ Add WebAPI functions to get version   |   🚧 wip    |      ♒︎    |       ❌       |
+| ➭ Show REAL version in UI               |   🚧 wip    |      ♒︎    |       ❌       |
 
 ## Versions
 
-| **VERSION** |   **STATUS**   | **DOCKERHUB** |  **DATE**  |
-|-------------|:--------------:|:-------------:|:----------:|
-|  **1.0.0**  |    ✔️ Stable    |     [1.0.0](https://hub.docker.com/repository/docker/arsscriptum/qbittorrentvpn/tags/1.0/sha256-eb4e39680cf805d838f765a137169f51463704ccab2dc66cfd700b1eb60178cd)     | 20/02/2025 |
-|  **1.2.0**  | ■■□□□□□□□□ 20% |       ❌       |      ❌     |
-|  **1.3.0**  |        ⏳       |       ♒︎       |      ♒︎     |
-|  **1.4.0**  |        ⏳       |       ♒︎       |      ♒︎     |
-|  **1.5.0**  |        ⏳       |       ♒︎       |      ♒︎     |
-
-
-
+| **VERSION** |   **STATUS**   | **DOCKERHUB** |    **DATE**  |
+|-------------|:--------------:|:-------------:|:------------:|
+|  **1.2.0**  |    ✔️ Stable    |     1.2.0    |  20/02/2025  |
+|  **1.4.0**  | ■■■■■■■□□□□ 60% |       ❌      |      ❌     |
+|  **1.5.0**  |        ⏳       |       ♒︎     |      ♒︎     |
+|  **1.6.0**  |        ⏳       |       ♒︎     |      ♒︎     |
 
 
 ## Added Functionalities
+
+1. View the External IP address information from [ipinfo.io](ipinfo.io/json) so I can confirm that Im on a VPN
+2. Speed Check on my VPN connection, using [OOKLA's speedtest-cli](https://www.speedtest.net/apps/cli) . Linux Package [ookla-speedtest-1.2.0-linux-x86_64.tgz](https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz)
 
 ![menu](doc/img/menu.png)
 

@@ -1,3 +1,7 @@
+tmp/
+tmp/**
+deploy/
+deploy/**
 src/gui/geoip/GeoIP.dat
 src/gui/geoip/GeoIP.dat.gz
 src/qbittorrent
