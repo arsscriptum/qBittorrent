@@ -1,8 +1,9 @@
-# qBittorrent - A BitTorrent client in Qt
+<center><img src="doc/img/logo.gif" alt="logo"></center>
+<center><img src="doc/img/client.png" alt="client"></center>
 
-## Description:
+## Description
 
-**Branch Of** [qbittorrent/qBittorrent](https://github.com/qbittorrent/qBittorrent). My branch is aimed at having a stable codebase for my **headless qBittorrent version** used for my docker container](https://github.com/arsscriptum/docker.qBittorrentNoxVpn) which runs this latest headless qBittorrent client while connecting to OpenVPN with integrated VPN.
+**qBittorrent** is Qt-based bittorrent client. **Branch Of** [qbittorrent/qBittorrent](https://github.com/qbittorrent/qBittorrent). My branch is aimed at having a stable codebase for my **headless qBittorrent version** used for my docker container](https://github.com/arsscriptum/docker.qBittorrentNoxVpn) which runs this latest headless qBittorrent client while connecting to OpenVPN with integrated VPN.
 
 It can be used in standalone mode, but it's not supported.
 
