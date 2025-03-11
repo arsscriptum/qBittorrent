@@ -74,6 +74,7 @@
         "qfileinfo": "cpp",
         "qnetworkcookie": "cpp",
         "ios": "cpp",
-        "qjsondocument": "cpp"
+        "qjsondocument": "cpp",
+        "qbitarray": "cpp"
     }
 }

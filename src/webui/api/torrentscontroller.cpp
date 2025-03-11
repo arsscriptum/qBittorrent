@@ -805,69 +805,75 @@ void TorrentsController::pieceStatesAction()
 
     setResult(pieceStates);
 }
-
 void TorrentsController::addAction()
 {
+    LogMsg(tr("Starting addAction() execution..."));
+    
     const QString urls = params()[u"urls"_s];
+    LogMsg(tr("Received URLs: '%1'").arg(urls));
 
     const bool skipChecking = parseBool(params()[u"skip_checking"_s]).value_or(false);
+    LogMsg(tr("Skip checking: %1").arg(skipChecking));
+    
     const bool seqDownload = parseBool(params()[u"sequentialDownload"_s]).value_or(false);
+    LogMsg(tr("Sequential download: %1").arg(seqDownload));
+    
     const bool firstLastPiece = parseBool(params()[u"firstLastPiecePrio"_s]).value_or(false);
+    LogMsg(tr("First and last piece priority: %1").arg(firstLastPiece));
+    
     const bool addForced = parseBool(params()[u"forced"_s]).value_or(false);
+    LogMsg(tr("Add forced: %1").arg(addForced));
+    
     const std::optional<bool> addToQueueTop = parseBool(params()[u"addToTopOfQueue"_s]);
     const std::optional<bool> addStopped = parseBool(params()[u"stopped"_s]);
+    
     const QString savepath = params()[u"savepath"_s].trimmed();
+    LogMsg(tr("Save path: '%1'").arg(savepath));
+    
     const QString downloadPath = params()[u"downloadPath"_s].trimmed();
+    LogMsg(tr("Download path: '%1'").arg(downloadPath));
+    
     const std::optional<bool> useDownloadPath = parseBool(params()[u"useDownloadPath"_s]);
     const QString category = params()[u"category"_s];
     const QStringList tags = params()[u"tags"_s].split(u',', Qt::SkipEmptyParts);
     const QString torrentName = params()[u"rename"_s].trimmed();
+    LogMsg(tr("Torrent name: '%1'").arg(torrentName));
+
     const int upLimit = parseInt(params()[u"upLimit"_s]).value_or(-1);
     const int dlLimit = parseInt(params()[u"dlLimit"_s]).value_or(-1);
     const double ratioLimit = parseDouble(params()[u"ratioLimit"_s]).value_or(BitTorrent::Torrent::USE_GLOBAL_RATIO);
+    
     const int seedingTimeLimit = parseInt(params()[u"seedingTimeLimit"_s]).value_or(BitTorrent::Torrent::USE_GLOBAL_SEEDING_TIME);
     const int inactiveSeedingTimeLimit = parseInt(params()[u"inactiveSeedingTimeLimit"_s]).value_or(BitTorrent::Torrent::USE_GLOBAL_INACTIVE_SEEDING_TIME);
+    
     const BitTorrent::ShareLimitAction shareLimitAction = Utils::String::toEnum(params()[u"shareLimitAction"_s], BitTorrent::ShareLimitAction::Default);
-    const std::optional<bool> autoTMM = parseBool(params()[u"autoTMM"_s]);
-
-    const QString stopConditionParam = params()[u"stopCondition"_s];
-    const std::optional<BitTorrent::Torrent::StopCondition> stopCondition = (!stopConditionParam.isEmpty()
-            ? Utils::String::toEnum(stopConditionParam, BitTorrent::Torrent::StopCondition::None)
-            : std::optional<BitTorrent::Torrent::StopCondition> {});
-
-    const QString contentLayoutParam = params()[u"contentLayout"_s];
-    const std::optional<BitTorrent::TorrentContentLayout> contentLayout = (!contentLayoutParam.isEmpty()
-            ? Utils::String::toEnum(contentLayoutParam, BitTorrent::TorrentContentLayout::Original)
-            : std::optional<BitTorrent::TorrentContentLayout> {});
-
+        
     const BitTorrent::AddTorrentParams addTorrentParams
     {
-        // TODO: Check if destination actually exists
         .name = torrentName,
         .category = category,
         .tags = {tags.cbegin(), tags.cend()},
         .savePath = Path(savepath),
-        .useDownloadPath = useDownloadPath,
+        .useDownloadPath = useDownloadPath.value_or(false),
         .downloadPath = Path(downloadPath),
         .sequential = seqDownload,
         .firstLastPiecePriority = firstLastPiece,
         .addForced = addForced,
-        .addToQueueTop = addToQueueTop,
-        .addStopped = addStopped,
-        .stopCondition = stopCondition,
-        .filePaths = {},
-        .filePriorities = {},
+        .addToQueueTop = addToQueueTop.value_or(false),
+        .addStopped = addStopped.value_or(false),
+        //.stopCondition = stopCondition.value_or(BitTorrent::Torrent::StopCondition::None),
+        .filePaths = {},  // Explicitly initializing to an empty list
+        .filePriorities = {},  // Explicitly initializing to an empty list
         .skipChecking = skipChecking,
-        .contentLayout = contentLayout,
-        .useAutoTMM = autoTMM,
+        //.contentLayout = contentLayout.value_or(BitTorrent::TorrentContentLayout::Original),
+        //.useAutoTMM = autoTMM.value_or(false),
         .uploadLimit = upLimit,
         .downloadLimit = dlLimit,
         .seedingTimeLimit = seedingTimeLimit,
         .inactiveSeedingTimeLimit = inactiveSeedingTimeLimit,
         .ratioLimit = ratioLimit,
         .shareLimitAction = shareLimitAction,
-        .sslParameters =
-        {
+        .sslParameters = {
             .certificate = QSslCertificate(params()[KEY_PROP_SSL_CERTIFICATE].toLatin1()),
             .privateKey = Utils::SSLKey::load(params()[KEY_PROP_SSL_PRIVATEKEY].toLatin1()),
             .dhParams = params()[KEY_PROP_SSL_DHPARAMS].toLatin1()
@@ -880,7 +886,10 @@ void TorrentsController::addAction()
         url = url.trimmed();
         if (!url.isEmpty())
         {
-            partialSuccess |= app()->addTorrentManager()->addTorrent(url, addTorrentParams);
+            LogMsg(tr("Adding torrent from URL: '%1'").arg(url));
+            bool result = app()->addTorrentManager()->addTorrent(url, addTorrentParams);
+            LogMsg(tr("Add torrent result: %1").arg(result));
+            partialSuccess |= result;
         }
     }
 
@@ -889,18 +898,28 @@ void TorrentsController::addAction()
     {
         if (const auto loadResult = BitTorrent::TorrentDescriptor::load(it.value()))
         {
-            partialSuccess |= BitTorrent::Session::instance()->addTorrent(loadResult.value(), addTorrentParams);
+            LogMsg(tr("Loading torrent file: '%1'").arg(it.key()));
+            bool result = BitTorrent::Session::instance()->addTorrent(loadResult.value(), addTorrentParams);
+            LogMsg(tr("Torrent file add result: %1").arg(result));
+            partialSuccess |= result;
         }
         else
         {
+            LogMsg(tr("Error: '%1' is not a valid torrent file.").arg(it.key()), Log::WARNING);
             throw APIError(APIErrorType::BadData, tr("Error: '%1' is not a valid torrent file.").arg(it.key()));
         }
     }
 
     if (partialSuccess)
+    {
+        LogMsg(tr("addAction() completed successfully."));
         setResult(u"Ok."_s);
+    }
     else
+    {
+        LogMsg(tr("addAction() failed."), Log::WARNING);
         setResult(u"Fails."_s);
+    }
 }
 
 void TorrentsController::addTrackersAction()

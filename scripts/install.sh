@@ -107,7 +107,10 @@ check_qt6_env() {
         log_info "QT6_PLUGINS_DIR=\"\$QT6_ROOT_LINUX/plugins\""
         log_info "Qt6_DIR=\"\$QT6_ROOT_LINUX/lib/cmake/Qt6\""
         log_info "Or run with '--qt-path' ./scripts/install.sh --qt-path /home/gp/Qt/6.8.2/gcc_64/"
-        exit 1
+        log_info "QT6_PLUGINS_PATH $QT6_PLUGINS_PATH"
+	log_info "QT6_BIN_DIR $QT6_BIN_DIR"
+	log_info "QT6_LIB_DIR $QT6_LIB_DIR"
+	exit 1
     fi
 }
 
